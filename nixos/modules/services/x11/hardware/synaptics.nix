@@ -69,6 +69,12 @@ in {
         description = "Move distance of the finger for a scroll event.";
       };
 
+      naturalScroll = mkOption {
+        type = types.bool;
+        default = false;
+        description = "Wether to enable natural scrolling (reverse vertical).";
+      };
+
       twoFingerScroll = mkOption {
         type = types.bool;
         default = false;
@@ -198,7 +204,8 @@ in {
           ${optionalString cfg.palmDetect ''Option "PalmDetect" "1"''}
           ${optionalString (cfg.palmMinWidth != null) ''Option "PalmMinWidth" "${toString cfg.palmMinWidth}"''}
           ${optionalString (cfg.palmMinZ != null) ''Option "PalmMinZ" "${toString cfg.palmMinZ}"''}
-          ${optionalString (cfg.scrollDelta != null) ''Option "VertScrollDelta" "${toString cfg.scrollDelta}"''}
+          ${optionalString (cfg.scrollDelta != null) ''Option "VertScrollDelta" "${if cfg.naturalScroll then "-"}${toString cfg.scrollDelta}"''}
+          ${optionalString (cfg.scrollDelta == null && cfg.naturalScroll) ''Option "VertScrollDelta" "-115"''}
           ${if !cfg.horizontalScroll then ''Option "HorizScrollDelta" "0"''
             else (optionalString (cfg.scrollDelta != null) ''Option "HorizScrollDelta" "${toString cfg.scrollDelta}"'')}
           ${cfg.additionalOptions}
